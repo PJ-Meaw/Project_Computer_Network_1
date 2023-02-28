@@ -28,19 +28,20 @@ client.on_message = on_message
 
 client.connect(BROKER_ADDRESS, PORT)
 
+Node_id = "0001"
+
 # while True:
 for index, row in df_films.iterrows():
     print(row)
-    data = {
-        "node" : "Node1",
-        "timesent": str(datetime.now()), 
-        "temperature": row.Humidity,
-        "humidity": row.Temperature,
-        "thermal array": row.ThermalArray
-        }
-
-    payload = str(data)
-    print(data)
-    client.publish("NodeId/Time/humidity/temperature/thermal array", payload)
-    time.sleep(10)
+    client.publish("Node_ID",Node_id) # TOPIC is NODE_ID
+    print("Just published " + str(Node_id) + " to topic TEMPERATURE")
+    client.publish("Time_Sent",str(datetime.now())) # TOPIC is Time
+    print("Just published " + str(datetime.now()) + " to topic Time_Sent")
+    client.publish("Humidity",row.Humidity) # TOPIC is Time
+    print("Just published " + str(row.Humidity) + " to topic Humidity")
+    client.publish("Temperature",row.Temperature) # TOPIC is Time
+    print("Just published " + str(row.Temperature) + " to topic Temperature")
+    client.publish("Thermal_array",row.ThermalArray) # TOPIC is Time
+    print("Just published " + str(row.ThermalArray) + " to topic Thermal_array") 
+    time.sleep(3) # 2 minutes for read next IOT NODE
 

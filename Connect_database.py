@@ -14,6 +14,9 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute("CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))")
+# mycursor.execute("SHOW TABLES")
+
+# for x in mycursor:
+#   print(x)
 
 
