@@ -32,10 +32,10 @@ def on_connect(client, userdata, flags, rc):
         print("Connect return result code: " + str(rc))
 
 count = 0
-
+Thermal_arr = []
 def on_message(client, userdata, message):
-    print("received message: " ,str(message.payload.decode("utf-8")))
-    global Node_id, Time_send, Humidity, Temp, Thermal_arr, count, data
+    # print("received message: " ,str(message.payload.decode("utf-8")))
+    global Node_id, Time_send, Humidity, Temp, count, data, Thermal_arr #ให้ตัวแปรไปเก็บที่บรรทัดที่ 35
     if message.topic == 'Node_ID':
         Node_id = str(message.payload.decode("utf-8"))
     if message.topic == 'Time_Sent':
@@ -44,20 +44,29 @@ def on_message(client, userdata, message):
         Humidity = str(message.payload.decode("utf-8"))
     if message.topic == 'Temperature':
         Temp = str(message.payload.decode("utf-8"))
-    if message.topic == 'Thermal_array':
-        Thermal_arr = str(message.payload.decode("utf-8"))
-    if count == 5:
+    for i in range (1,16): # for(i=1 ; i<16 ; i++)
+        if message.topic == ('Thermals_array/' + str(i)):
+            Thermal_arr.append(str(message.payload.decode("utf-8")))
+            # print("value" + str(i) + " = " + str(message.payload.decode("utf-8")))
+    
+        
+    count += 1    
+    
+    if count == 19:
+        Thermal = ""
+        for i in range (0,15):
+            Thermal += Thermal_arr[i]
+        print(Thermal)
         data = {
             "Node_id": Node_id,
             "Time_send": Time_send,
             "Humidity": float(Humidity),
             "Temp": float(Temp),
-            "Thermal_arr": Thermal_arr
+            "Thermal_arr": Thermal
         }
         send_data(data)
         count = 0
-        #print(data)
-    count += 1
+    
            
 
 
@@ -65,13 +74,19 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect(BROKER_ADDRESS, PORT,60)
+client.connect(BROKER_ADDRESS, PORT,200)
 
 client.subscribe("Node_ID") 
 client.subscribe("Time_Sent") 
 client.subscribe("Humidity") 
 client.subscribe("Temperature")
-client.subscribe("Thermal_array") 
+# client.subscribe("Thermals_array/+")
+
+for i in range (1,16) :
+    client.subscribe("Thermals_array/" + str(i))
+
 client.on_message = on_message 
+
+
 
 client.loop_forever()
