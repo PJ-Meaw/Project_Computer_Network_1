@@ -43,16 +43,26 @@ for index, row in df_films.iterrows():
     # print("Just published " + str(row.Temperature) + " to topic Temperature")
     i = 1
     value = len(row.ThermalArray)
-    while(value > 250) :
-        info = row.ThermalArray
-        client.publish("Thermals_array/" + str(i), info[0:250]) # TOPIC is Time
-        print(info[0:250])
-        row.ThermalArray = row.ThermalArray[250:len(row.ThermalArray)]
-        print("Thermals_array/" + str(i))
+    while(value > 0) :
+        if(value > 250) : 
+            info = row.ThermalArray
+            client.publish("Thermals_array/" + str(i), info[0:250]) # TOPIC is Time
+            print(info[0:250])
+            row.ThermalArray = row.ThermalArray[250:len(row.ThermalArray)]
+            print("Thermals_array/" + str(i))
+            
+            value -= 250
+            # print("Just published " + str(row.ThermalArray) + " to topic Thermal_array") 
+            print(i)
+        else : 
+            info = row.ThermalArray
+            client.publish("Thermals_array/" + str(i), info[0:value]) # TOPIC is Time
+            print(info[0:value])
+            print("Thermals_array/" + str(i))
+            value -= len(info)
+            print(i)
+        
         i += 1
-        value -= 256
-        # print("Just published " + str(row.ThermalArray) + " to topic Thermal_array") 
-    print(i)
-    
+        
     time.sleep(10) # 2 minutes for read next IOT NODE
 

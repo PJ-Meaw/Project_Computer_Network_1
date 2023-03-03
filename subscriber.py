@@ -44,7 +44,7 @@ def on_message(client, userdata, message):
         Humidity = str(message.payload.decode("utf-8"))
     if message.topic == 'Temperature':
         Temp = str(message.payload.decode("utf-8"))
-    for i in range (1,16): # for(i=1 ; i<16 ; i++)
+    for i in range (1,17): # for(i=1 ; i<17 ; i++)
         if message.topic == ('Thermals_array/' + str(i)):
             Thermal_arr.append(str(message.payload.decode("utf-8")))
             # print("value" + str(i) + " = " + str(message.payload.decode("utf-8")))
@@ -52,9 +52,9 @@ def on_message(client, userdata, message):
         
     count += 1    
     
-    if count == 19:
+    if count == 20:
         Thermal = ""
-        for i in range (0,15):
+        for i in range (0,16):
             Thermal += Thermal_arr[i]
         print(Thermal)
         data = {
@@ -82,7 +82,7 @@ client.subscribe("Humidity")
 client.subscribe("Temperature")
 # client.subscribe("Thermals_array/+")
 
-for i in range (1,16) :
+for i in range (1,17) :
     client.subscribe("Thermals_array/" + str(i))
 
 client.on_message = on_message 
