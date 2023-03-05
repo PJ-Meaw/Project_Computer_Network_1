@@ -4,6 +4,7 @@ from datetime import datetime
 import time
 import pandas as pd
 
+#set address and port connect to broker
 BROKER_ADDRESS = "localhost"
 PORT = 1883
 
@@ -17,7 +18,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print("Recieve message: " + msg.topic + "-->" + msg.payload.decode("utf-8"))        
 
-
+# read sensor data from excel
 df_films = pd.read_excel('SampleInput.xlsx',"Sheet1")
 
 

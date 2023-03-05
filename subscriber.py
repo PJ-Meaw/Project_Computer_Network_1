@@ -102,11 +102,6 @@ client.subscribe("Humidity")
 client.subscribe("Temperature")
 client.subscribe("Thermals_array/#")
 
-for i in range (1,17) :
-    client.subscribe("Thermals_array/" + str(i))
-
-client.on_message = on_message 
-
 
 
 client.loop_forever()
